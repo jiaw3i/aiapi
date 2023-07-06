@@ -1,0 +1,4 @@
+langchain
+fastapi==0.99.1
+flask==2.2.2
+nacos-sdk-python

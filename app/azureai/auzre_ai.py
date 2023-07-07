@@ -20,7 +20,6 @@ os.environ['OPENAI_API_TYPE'] = "azure"
 os.environ['OPENAI_API_BASE'] = 'https://jiawei.openai.azure.com/'
 # os.environ['OPENAI_API_VERSION'] = "2022-12-01"
 os.environ['OPENAI_API_VERSION'] = "2023-03-15-preview"
-os.environ['OPENAI_API_KEY'] = '8f1fdaec3eca44df865368bbbee2761c'
 
 ai = AzureChatOpenAI(
     deployment_name='gpt-35-turbo',

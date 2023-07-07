@@ -70,3 +70,15 @@ def chat():
         return Response(stream(q, input), mimetype='text/event-stream')
     else:
         return Response(None, mimetype='text/event-stream')
+
+
+@azure_ai.route('/clear')
+def clear():
+    uid = request.args.get("id")
+    if uid in sessions:
+        del sessions[uid]
+    return {
+        "code": 200,
+        "success": True,
+        "data": "success"
+    }

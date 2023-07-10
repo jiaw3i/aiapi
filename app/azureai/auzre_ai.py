@@ -1,19 +1,13 @@
 # This file is used to handle the azure ai chatbot
-import asyncio
-import multiprocessing
 from queue import Queue
 
 from flask import Blueprint, request, Response
 from langchain import ConversationChain, LLMChain
 from langchain.chat_models import AzureChatOpenAI
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from flask_sse import sse
 import os
 import threading
 
-from langchain.llms import AzureOpenAI
 from langchain.memory import ConversationBufferMemory
-from langchain.schema import HumanMessage, SystemMessage
 
 from app.azureai.handler.stream_handler import QueueCallbackHandler
 from app.azureai.langchain.chain.prompts import message_prompt

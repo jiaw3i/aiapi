@@ -5,9 +5,6 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import LLMResult, AgentAction, AgentFinish
 
 
-# q = queue.Queue()
-
-
 class QueueCallbackHandler(BaseCallbackHandler):
     """Callback handler for streaming. Only works with LLMs that support streaming."""
 

@@ -51,7 +51,9 @@ def stream(q, input):
     threading.Thread(target=llm_thread, args=(q, input)).start()
     while True:
         message = q.get()
-        yield f'data: %s\n\n' % message
+        message = message.replace('\n', '&#92n;')
+        if message != "":
+            yield f'data: %s\n\n' % message
 
 
 @azure_ai.route('/chat', methods=['GET', 'POST'])

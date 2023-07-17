@@ -1,6 +1,8 @@
 # This file is used to handle the azure ai chatbot
+import uuid
 from queue import Queue
 
+from cachetools import TTLCache
 from flask import Blueprint, request, Response
 from langchain import ConversationChain, LLMChain
 from langchain.chat_models import AzureChatOpenAI
@@ -26,6 +28,8 @@ ai = AzureChatOpenAI(
 )
 
 sessions = {}
+
+ttl_cache = TTLCache(maxsize=10, ttl=60 * 60 * 24)
 
 
 def llm_thread(q, input):
@@ -62,8 +66,16 @@ def chat():
     if request.method == 'POST':
 
         input = request.get_json()
-        # asyncio.run(dochat(input_text, q))
-        return Response(stream(q, input), mimetype='text/event-stream')
+        verify_token = input.get("verifyToken", None)
+        if verify_token in ttl_cache:
+            # asyncio.run(dochat(input_text, q))
+            return Response(stream(q, input), mimetype='text/event-stream')
+        else:
+            return {
+                "code": 200,
+                "success": False,
+                "data": "verify token error"
+            }
     else:
         return Response(None, mimetype='text/event-stream')
 
@@ -77,4 +89,24 @@ def clear():
         "code": 200,
         "success": True,
         "data": "success"
+    }
+
+
+@azure_ai.route('/verify', methods=['GET', 'POST'])
+def verify():
+    param = request.get_json()
+    verify_code = param["verifyCode"]
+    # 生成token放入cachetools
+    verify_token = uuid.uuid4().hex
+    ttl_cache[verify_token] = verify_code
+    if verify_code == os.getenv("VERIFY_CODE", "qpzm"):
+        return {
+            "code": 200,
+            "success": True,
+            "data": verify_token
+        }
+    return {
+        "code": 200,
+        "success": False,
+        "data": "认证失败"
     }

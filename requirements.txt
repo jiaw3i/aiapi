@@ -2,3 +2,4 @@ langchain
 flask==2.2.2
 nacos-sdk-python
 openai
+cachetools
